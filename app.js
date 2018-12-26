@@ -2,7 +2,11 @@
 
 var a127 = require('a127-magic');
 var express = require('express');
+const bodyParser = require('body-parser');
+
 var app = express();
+
+const {createTodoRoute} = require('./api/controllers/create-todo-route')
 
 module.exports = app; // for testing
 
@@ -11,6 +15,9 @@ a127.init(function(config) {
 
   // include a127 middleware
   app.use(a127.middleware(config));
+
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({extended: false}))
 
   // error handler to emit errors as a json string
   app.use(function(err, req, res, next) {
@@ -29,10 +36,12 @@ a127.init(function(config) {
     res.end(JSON.stringify(err));
   });
 
+  app.post('/todos', createTodoRoute)
+
   var ip = process.env.IP || 'localhost';
-  var port = process.env.PORT || 10010;
+  var port = process.env.PORT || 3000;
   // begin listening for client requests
   app.listen(port, ip);
 
-  console.log('try this:\ncurl http://' + ip + ':' + port + '/hello?name=Scott');
+  // console.log('try this:\ncurl http://' + ip + ':' + port + '/hello?name=Scott');
 });

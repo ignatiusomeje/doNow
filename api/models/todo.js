@@ -32,3 +32,5 @@ const TodoSchema = new mongoose.Schema({
 });
 
 const Todos = mongoose.model('Todos', TodoSchema)
+
+module.exports = { Todos }

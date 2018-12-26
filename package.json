@@ -9,6 +9,7 @@
   "main": "app.js",
   "dependencies": {
     "a127-magic": "^0.12.0",
+    "body-parser": "^1.18.3",
     "express": "3.x.x",
     "mongoose": "^5.4.0",
     "volos-analytics-apigee": "",
@@ -29,7 +30,7 @@
     "supertest": "0.15.x"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "api": {
     "name": "upgraded-todo",
