@@ -1,8 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('./../db/dbConnect');
 
 const {Todos} = require('./../models/todo');
-
-mongoose.connect('mongodb://localhost:27017/UpgradedTodo', { useNewUrlParser: true });
 
 async function createTodo(activity, creator){
   console.log(activity, creator);

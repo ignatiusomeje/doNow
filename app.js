@@ -6,7 +6,9 @@ const bodyParser = require('body-parser');
 
 var app = express();
 
-const {createTodoRoute} = require('./api/controllers/create-todo-route')
+const {createTodoRoute} = require('./api/controllers/create-todo-route');
+const {getAllTodos} = require('./api/controllers/get-todo-route');
+const {getTodo} = require('./api/controllers/get-todo-by-id-route')
 
 module.exports = app; // for testing
 
@@ -36,7 +38,9 @@ a127.init(function(config) {
     res.end(JSON.stringify(err));
   });
 
-  app.post('/todos', createTodoRoute)
+  app.post('/todos', createTodoRoute);
+  app.get('/todos', getAllTodos);
+  app.get('/todos/:id', getTodo);
 
   var ip = process.env.IP || 'localhost';
   var port = process.env.PORT || 3000;
