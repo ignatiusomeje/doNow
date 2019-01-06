@@ -6,9 +6,11 @@ const bodyParser = require('body-parser');
 
 var app = express();
 
-const {createTodoRoute} = require('./api/controllers/create-todo-route');
-const {getAllTodos} = require('./api/controllers/get-todo-route');
-const {getTodo} = require('./api/controllers/get-todo-by-id-route')
+const {todoCreateRoute} = require('./api/controllers/create-todo-route');
+const {todoGetAllRoute} = require('./api/controllers/get-todo-route');
+const {todoGetOneRoute} = require('./api/controllers/get-todo-by-id-route');
+const {todoUpdateRoute} = require('./api/controllers/update-todo-route');
+const {todoDeleteRoute} = require('./api/controllers/delete-todo-route');
 
 module.exports = app; // for testing
 
@@ -38,9 +40,11 @@ a127.init(function(config) {
     res.end(JSON.stringify(err));
   });
 
-  app.post('/todos', createTodoRoute);
-  app.get('/todos', getAllTodos);
-  app.get('/todos/:id', getTodo);
+  app.post('/todos', todoCreateRoute);
+  app.get('/todos', todoGetAllRoute);
+  app.get('/todos/:id', todoGetOneRoute);
+  app.patch('/todos/:id', todoUpdateRoute);
+  app.delete('/todos/:id', todoDeleteRoute);
 
   var ip = process.env.IP || 'localhost';
   var port = process.env.PORT || 3000;

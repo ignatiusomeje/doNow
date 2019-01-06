@@ -1,16 +1,12 @@
 const {createTodo} = require('./../data_access_layer/create-todo')
 
-// console.log('HI');
-async function createTodoRoute(req, res){
-  // console.log(req.body);
+async function todoCreateRoute(req, res){
   try{
     const docs = await createTodo(req.body.activity,)
-    // console.log('HI');
-    // console.log(docs);
-
+    res.send(docs)
   } catch(e) {
-
+    res.send(e)
   }
 }
 
-module.exports = {createTodoRoute};
+module.exports = {todoCreateRoute};

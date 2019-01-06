@@ -3,7 +3,7 @@ const mongoose = require('./../db/dbConnect')
 
 async function getTodos(){
   try{
-    const docs = await Todos.find({});
+    const docs = await Todos.find({isDeleted: false});
     return docs;
   } catch(e) {
     return e;

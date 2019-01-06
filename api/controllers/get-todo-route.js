@@ -1,6 +1,6 @@
 const {getTodos} = require('./../data_access_layer/get-todos');
 
-async function getAllTodos(req, res){
+async function todoGetAllRoute(req, res){
   try{
     const docs = await getTodos();
     res.send(docs);
@@ -9,4 +9,4 @@ async function getAllTodos(req, res){
   }
 }
 
-module.exports = {getAllTodos}
+module.exports = {todoGetAllRoute}

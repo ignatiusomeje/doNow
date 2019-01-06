@@ -1,6 +1,6 @@
 const {todoById} = require('./../data_access_layer/get-todo-by-id');
 
-async function getTodo(req, res){
+async function todoGetOneRoute(req, res){
   console.log(req.params)
   try{
     const docs = await todoById(req.params.id);
@@ -10,4 +10,4 @@ async function getTodo(req, res){
   }
 }
 
-module.exports = {getTodo}
+module.exports = {todoGetOneRoute}
