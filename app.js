@@ -6,11 +6,11 @@ const bodyParser = require('body-parser');
 
 var app = express();
 
-const {todoCreateRoute} = require('./api/controllers/create-todo-route');
-const {todoGetAllRoute} = require('./api/controllers/get-todo-route');
-const {todoGetOneRoute} = require('./api/controllers/get-todo-by-id-route');
-const {todoUpdateRoute} = require('./api/controllers/update-todo-route');
-const {todoDeleteRoute} = require('./api/controllers/delete-todo-route');
+const {todoCreateRoute} = require('./api/controllers/todoroutes/create-todo-route');
+const {todoGetAllRoute} = require('./api/controllers/todoroutes/get-todo-route');
+const {todoGetOneRoute} = require('./api/controllers/todoroutes/get-todo-by-id-route');
+const {todoUpdateRoute} = require('./api/controllers/todoroutes/update-todo-route');
+const {todoDeleteRoute} = require('./api/controllers/todoroutes/delete-todo-route');
 
 module.exports = app; // for testing
 
@@ -50,6 +50,4 @@ a127.init(function(config) {
   var port = process.env.PORT || 3000;
   // begin listening for client requests
   app.listen(port, ip);
-
-  // console.log('try this:\ncurl http://' + ip + ':' + port + '/hello?name=Scott');
 });

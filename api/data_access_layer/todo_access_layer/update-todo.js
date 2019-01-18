@@ -1,13 +1,15 @@
 const {ObjectID} = require('mongodb');
 const {isBoolean, pick} = require('lodash');
 
-const {Todos} = require('./../models/todo')
+const {Todos} = require('./../../models/todo')
 
 async function Update(id, data, creator){
-
   try{
     if (!ObjectID.isValid(id)){
-      return 'Invalid Id'
+      return {
+        status: 400,
+        message: 'Invalid Request Credentials'
+      }
     }
 
     const body = pick(data,['activity', 'isDone']);
@@ -18,20 +20,25 @@ async function Update(id, data, creator){
       body.isDoneDate = null;
     }
 
-    const doc = Todos.findOneAndUpdate({_id: id, 
-      // creator, 
+    const doc = await Todos.findOneAndUpdate({_id: id, 
+      creator, 
       isDeleted: false},
       { $set: body },
       { new: true }
     );
 
     if (!doc){
-      return 'No Document found or document has been deleted';
-    } else{
-      return doc;
-    }
+      throw Error()
+    } 
+    return  {
+      status: 200,
+      message: doc
+    };
   } catch(e){
-    console.log(e)
+    return {
+      status: 404,
+      message: 'No Todo found or Todo has been deleted'
+    }
   }
 }
 

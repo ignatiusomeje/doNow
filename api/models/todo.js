@@ -9,7 +9,7 @@ const TodoSchema = new mongoose.Schema({
   },
   CreatedAt: {
     type: Date,
-    default: Date.now()
+    default: new Date()
   },
   isDone: {
     type: Boolean,
@@ -22,13 +22,21 @@ const TodoSchema = new mongoose.Schema({
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
-    required: false, //needs to be true but not now till every thing is settled.,
+    required: true,
     trim: true,
   },
   isDeleted: {
     type: Boolean,
     default: false
   },
+  durationCreatedAt:{
+    type: String,
+    default: null,
+  },
+  durationDoneAt:{
+    type: String,
+    default: null,
+  }
 });
 
 const Todos = mongoose.model('Todos', TodoSchema)

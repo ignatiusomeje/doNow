@@ -1,19 +1,28 @@
 const {ObjectID} = require('mongodb')
 
-const {Todos} = require('./../models/todo');
-const mongoose = require('./../db/dbConnect');
+const {Todos} = require('./../../models/todo');
+const mongoose = require('./../../db/dbConnect');
 
 async function deleteTodo(id, creator){
   try{
     if (!ObjectID.isValid(id)){
-      return {message: 'invalid ID', status: '404'}
+      return {
+        status: '400',
+        message: 'Invalid Request Credentials'
+      }
     }
     const doc = await Todos.findOneAndUpdate({_id: id, isDeleted: false, creator},{$set:{
       isDeleted: true
     }},{new: true});
-    return doc
+    return {
+      status: '200',
+      message: doc
+    }
   } catch(e){
-    return e
+    return {
+      status: '400',
+      message: doc
+    }
   }
 }
 

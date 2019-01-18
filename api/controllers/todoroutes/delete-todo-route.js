@@ -1,5 +1,5 @@
 
-const {deleteTodo} = require('./../data_access_layer/delete-todo')
+const {deleteTodo} = require('./../../data_access_layer/todo_access_layer/delete-todo')
 
 async function todoDeleteRoute(req, res){
   try{
