@@ -12,6 +12,9 @@ const {todoGetOneRoute} = require('./api/controllers/todoroutes/get-todo-by-id-r
 const {todoUpdateRoute} = require('./api/controllers/todoroutes/update-todo-route');
 const {todoDeleteRoute} = require('./api/controllers/todoroutes/delete-todo-route');
 
+const{userCreateRoute} = require('./api/controllers/userroutes/create-user-route');
+
+
 module.exports = app; // for testing
 
 // initialize a127 framework
@@ -45,6 +48,8 @@ a127.init(function(config) {
   app.get('/todos/:id', todoGetOneRoute);
   app.patch('/todos/:id', todoUpdateRoute);
   app.delete('/todos/:id', todoDeleteRoute);
+
+  app.post('/users', userCreateRoute)
 
   var ip = process.env.IP || 'localhost';
   var port = process.env.PORT || 3000;
