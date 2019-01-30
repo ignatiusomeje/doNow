@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const {isEmail, isMobilePhone} = require('validator');
+const tokenGenerator = require('token-generator')({
+  salt: 'welcome to this api',
+  timestampMap: "abcdefg123"
+})
 
 const UserSchema = new mongoose.Schema({
   firstName:{
@@ -93,4 +97,4 @@ const UserSchema = new mongoose.Schema({
 
 const Users = mongoose.model('Users', UserSchema);
 
-module.exports = { Users };
+module.exports = { Users, tokenGenerator };

@@ -33,7 +33,7 @@ async function emailer(userAddress, email, callback){
               status: 200,
               message: 'email sent successfully, please do verify your account from your email account'
             }
-            return callback(result);
+            return callback(undefined, result);
           }
         });
       }else{
@@ -45,10 +45,11 @@ async function emailer(userAddress, email, callback){
       };
     });
   }catch(e){
-    return {
+    const err = {
       status: 400,
       message: 'Email Account verification and email sending failed'
     }
+    return callback(err)
   }
 }
 

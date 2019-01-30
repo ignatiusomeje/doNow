@@ -1,12 +1,7 @@
-const tokenGenerator = require('token-generator')({
-  salt: 'welcome to this api',
-  timestampMap: "abcdefg123"
-})
-
-const {Users} = require('./../../models/user');
+const {Users, tokenGenerator} = require('./../../models/user');
 const {emailer} = require('./../../utilities/emailsender');
 
-const url = "localhost:3000";
+const url = "http://localhost:3000";//check reset_password.js for editing
 
 async function createUser(userInfo, callback){
   try{

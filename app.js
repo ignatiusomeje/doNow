@@ -15,6 +15,7 @@ const {todoDeleteRoute} = require('./api/controllers/todoroutes/delete-todo-rout
 const {userCreateRoute} = require('./api/controllers/userroutes/create-user-route');
 const {userLoginRoute} = require('./api/controllers/userroutes/login-user-route');
 const {userVerifyAccountRoute} = require('./api/controllers/userroutes/verify-account-route');
+const {userPasswordResetRoute} = require('./api/controllers/userroutes/reset-password-route');
 
 
 module.exports = app; // for testing
@@ -54,6 +55,7 @@ a127.init(function(config) {
   app.post('/users', userCreateRoute);
   app.post('/login', userLoginRoute);
   app.get('/:email/:token', userVerifyAccountRoute);
+  app.patch('/reset-password', userPasswordResetRoute);
 
   var ip = process.env.IP || 'localhost';
   var port = process.env.PORT || 3000;
