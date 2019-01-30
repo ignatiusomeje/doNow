@@ -44,7 +44,6 @@ async function verifyAccount(data){
       message: 'Invalid Token'
     }
   }catch(e){
-    console.log(e)
     return {
       status: 400,
       message: 'Unable to  verify account details'
