@@ -17,6 +17,7 @@ const {userLoginRoute} = require('./api/controllers/userroutes/login-user-route'
 const {userVerifyAccountRoute} = require('./api/controllers/userroutes/verify-account-route');
 const {userPasswordResetRoute} = require('./api/controllers/userroutes/reset-password-route');
 const {userChangePasswordRoute} = require('./api/controllers/userroutes/change-password-route');
+const {userChangeDetailsRoute} = require('./api/controllers/userroutes/change-details-route')
 
 
 module.exports = app; // for testing
@@ -57,7 +58,8 @@ a127.init(function(config) {
   app.post('/login', userLoginRoute);
   app.get('/:email/:token', userVerifyAccountRoute);
   app.post('/reset-password', userPasswordResetRoute);
-  app.patch('/password/:id', userChangePasswordRoute)
+  app.patch('/password/:id', userChangePasswordRoute);
+  app.patch('/change-details', userChangeDetailsRoute);
 
   var ip = process.env.IP || 'localhost';
   var port = process.env.PORT || 3000;

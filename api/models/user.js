@@ -69,7 +69,7 @@ const UserSchema = new mongoose.Schema({
     default: null,
   },
   lastUpdate:{
-    type: String,
+    type: Date,
     default: null,
   },
   isValid:{
