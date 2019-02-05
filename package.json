@@ -10,6 +10,7 @@
   "dependencies": {
     "a127-magic": "^0.12.0",
     "axios": "^0.18.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "express": "3.x.x",
     "jsonwebtoken": "^8.4.0",

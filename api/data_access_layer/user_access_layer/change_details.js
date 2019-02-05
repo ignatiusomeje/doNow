@@ -5,6 +5,7 @@ const moment = require('moment');
 const {Users} = require('./../../models/user')
 
 async function changeDetails(userId, details){
+  console.log(userId)
   try{
     if (!ObjectID.isValid(userId)){
       return {

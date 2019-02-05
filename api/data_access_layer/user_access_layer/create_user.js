@@ -22,13 +22,14 @@ async function createUser(userInfo, callback){
       subject: 'ACCOUNT VERIFICATION',
       text:`HI, ${userInfo.email} <br> Welcome to our App, but to continue with our app usage please on the link below to activate your account: <br> ${url}/${userInfo.email}/${token} `
     }
-    await emailer(userInfo.email, data, async (err, data)=>{
-      if (err){
-        return callback(err)
-      };
-      callback(data);
-    });
-    await user.save()
+    // await emailer(userInfo.email, data, async (err, data)=>{
+    //   if (err){
+    //     return callback(err)
+    //   };
+    //   callback(data);
+    // });
+    const users = await user.save();
+    callback(undefined, users);
   }catch(e){
     return {
       status: 400,
