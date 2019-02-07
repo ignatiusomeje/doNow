@@ -1,8 +1,10 @@
-const {createTodo} = require('./../../data_access_layer/todo_access_layer/create-todo')
+const {createTodo} = require('./../../data_access_layer/todo_access_layer/create-todo');
+const {authenticate} = require('./../../utilities/authenticator');
 
 async function todoCreateRoute(req, res){
   try{
-    const docs = await createTodo(req.body.activity, req.user.id)
+    const user = await authenticate(req, res)
+    const docs = await createTodo(req.body.activity, user.message._id)
     res.status(docs.status).json(docs)
   } catch(e) {
     res.status(400).json({

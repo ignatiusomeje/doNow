@@ -1,5 +1,6 @@
 const {ObjectID} = require('mongodb');
 const {isBoolean, pick} = require('lodash');
+const moment = require('moment')
 
 const {Todos} = require('./../../models/todo')
 
@@ -30,6 +31,15 @@ async function Update(id, data, creator){
     if (!doc){
       throw Error()
     } 
+    if (doc.isDone === true){
+      doc.durationCreatedAt = moment(doc.CreatedAt).calendar();
+      doc.durationDoneAt = moment(doc.isDoneDate).calendar();
+      return  {
+        status: 200,
+        message: doc
+      };
+    }
+    doc.durationCreatedAt = moment(doc.CreatedAt).calendar();
     return  {
       status: 200,
       message: doc

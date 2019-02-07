@@ -1,8 +1,10 @@
 const {todoById} = require('./../../data_access_layer/todo_access_layer/get-todo-by-id');
+const {authenticate} = require('./../../utilities/authenticator');
 
 async function todoGetOneRoute(req, res){
   try{
-    const docs = await todoById(req.params.id, req.user.id);
+    const user = await authenticate(req, res)
+    const docs = await todoById(req.params.id, user.message._id);
     res.status(docs.status).json(docs);
   } catch(e){
     res.status(400).json({

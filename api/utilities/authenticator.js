@@ -6,7 +6,6 @@ async function authenticate(req, res, next){
   try{
     const tokenHeader = req.header('Bearer');
     const feedback = await Users.getUserByToken(tokenHeader);
-    console.log(feedback)
     if (feedback.status !== 200){
       res.status(feedback.status).json(feedback)
     }

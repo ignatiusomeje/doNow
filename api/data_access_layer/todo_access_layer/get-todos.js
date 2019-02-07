@@ -1,6 +1,7 @@
+const moment = require('moment');
+
 const {Todos} = require('./../../models/todo');
 const mongoose = require('./../../db/dbConnect');
-const moment = require('moment');
 
 async function getTodos(creator){
   try{
