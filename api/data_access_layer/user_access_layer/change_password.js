@@ -18,10 +18,8 @@ async function changePassword(userId, password){
           message: 'Invalid Access'
         }
       };
-      await Users.findByIdAndUpdate({_id: userId},{$set:{
-        password: password,
-        isValid: false
-      }},{new: true});
+      await user.set({password: password, isValid: false});
+      await user.save();
       return {
         status: 200,
         message: 'Password Change was Successful'

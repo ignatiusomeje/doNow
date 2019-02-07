@@ -3,7 +3,7 @@ const{resetPassword} = require('./../../data_access_layer/user_access_layer/rese
 
 async function userPasswordResetRoute(req, res){
   try{
-    const info = await resetPassword(req.body.email, (err, result) => {
+    resetPassword(req.body.email, (err, result) => {
       if (err){
         res.status(err.status).json(err)
       }

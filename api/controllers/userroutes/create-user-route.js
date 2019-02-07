@@ -3,7 +3,7 @@ const {createUser} = require('./../../data_access_layer/user_access_layer/create
 
 async function userCreateRoute(req,res){
   try{
-    await createUser(req.body, (err, result)=>{
+    createUser(req.body, (err, result)=>{
       if(err){
         return res.status(err.status).json(err);
       };

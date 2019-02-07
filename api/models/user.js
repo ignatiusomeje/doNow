@@ -5,7 +5,8 @@ const tokenGenerator = require('token-generator')({
   timestampMap: "abcdefg123"
 });
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken') 
+const jwt = require('jsonwebtoken');
+const {pick} = require('lodash') 
 
 const UserSchema = new mongoose.Schema({
   firstName:{
@@ -25,14 +26,14 @@ const UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 2,
-    // unique: true,
+    unique: true,
   },
   email:{
     type: String,
     required: true,
     trim: true,
     minlength: 2,
-    // unique: true,
+    unique: true,
     validate:{
       validator: isEmail,
       message: props => `${props.value} is not a valid email`
@@ -81,12 +82,10 @@ const UserSchema = new mongoose.Schema({
   token:{
     access:{
       type: String,
-      // required: true,
       default: null,
     },
     token:{
       type: String,
-      // required: true,
       default: null
     }
   },
@@ -98,27 +97,36 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', function(next){
+  const user = this;
   try{
-    const user = this;
     if (user.isModified('password')){
       bcrypt.genSalt(10, function(err, salt){
         bcrypt.hash(user.password, salt, function (err, hash){
-          user.password = hash;
-          user.save()
+        user.password = hash;
           next();
-          return user;
         })
       })
+    }else{
+      next()
     }
-    next()
   }catch(e){
     next();
   }
 });
 
-UserSchema.methods.generateAuth = async function(){
+UserSchema.methods.toJSON = function(){
+  const user = this;
   try{
-    const user = this;
+    const config = user.toObject();
+    return  pick(config, ['firstName','lastName','username','email','dob','address','phoneNumber','lastSeen','lastUpdate','token']);
+  }catch(e){
+    return e;
+  }
+}
+
+UserSchema.methods.generateAuth = async function(){
+  const user = this;
+  try{
     const access = "Bearer";
     const token = jwt.sign({_id: user.id, time: new Date(), access}, 'hackers').toString();
     user.token.access = access;
@@ -134,8 +142,8 @@ UserSchema.methods.generateAuth = async function(){
 }
 
 UserSchema.statics.getUserByToken = async function(token){
+  const Users = this;
   try{
-    const Users = this;
     if (!token){
       return {
         status: 403,

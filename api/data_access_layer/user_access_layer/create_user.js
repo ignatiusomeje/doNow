@@ -18,18 +18,32 @@ async function createUser(userInfo, callback){
       phoneNumber: userInfo.phoneNumber,
       authToken: token,
     });
+    const emailVerify = await Users.findOne({$or:[{email: userInfo.email}, {username: userInfo.username}]});
+    if (emailVerify){
+      const fault = emailVerify.email === userInfo.email ? 'Email' : 'Username';
+      return callback({
+        status: 403,
+        message: `${fault} already exist`
+      })
+    }
     const data = {
       subject: 'ACCOUNT VERIFICATION',
       text:`HI, ${userInfo.email} <br> Welcome to our App, but to continue with our app usage please on the link below to activate your account: <br> ${url}/${userInfo.email}/${token} `
     }
-    // await emailer(userInfo.email, data, async (err, data)=>{
-    //   if (err){
-    //     return callback(err)
-    //   };
-    //   callback(data);
-    // });
-    const users = await user.save();
-    callback(undefined, users);
+    await emailer(userInfo.email, data, async (err, data)=>{
+      try{
+        if (err){
+          return callback(err)
+        };
+        callback(undefined, data);
+        await user.save();
+      }catch(e){
+        callback({
+          status: 400,
+          message: 'error'
+        })
+      }
+    });
   }catch(e){
     return {
       status: 400,

@@ -1,8 +1,3 @@
-// const tokenGenerator = require('token-generator')({
-//   salt: 'welcome to this api',
-//   timestampMap: "abcdefg123"
-// })
-
 const {Users, tokenGenerator} = require('./../../models/user');
 
 async function verifyAccount(data){

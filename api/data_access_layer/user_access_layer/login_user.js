@@ -1,4 +1,3 @@
-const {isEmail} = require('validator');
 const {pick} = require('lodash');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
@@ -8,19 +7,14 @@ const {Users} = require('./../../models/user')
 async function loginUser(usersData) {
   try{
     const body = pick(usersData,['name', 'password']);
-    let user;
-    if (isEmail(body.name)){
-      user = await Users.findOne({email: body.name});
-    } else {
-      user = await Users.findOne({username: body.name});
-    }
+    const user = await Users.findOne({$or: [{email: body.name},{username: body.name}]});
     if (!user){
       return {
         status: 404,
         message: 'Username/Email or Password is Invalid'
       }
     }
-    if (bcrypt.compare(user.password, body.password)){
+    if (await bcrypt.compare(body.password, user.password)){
       if (user.authToken !== null){
         return {
           status: 400,
@@ -28,23 +22,20 @@ async function loginUser(usersData) {
         }
       }
       if (user.lastSeen === null){
-        await Users.findOneAndUpdate({email: user.email, username: user.username},{$set:{
-          lastSeen: new Date()
-        }},{new: true});
+        await user.set({lastSeen: new Date()});
         await user.generateAuth();
-        user.lastSeen = moment().fromNow(user.lastSeen);
+        user.lastSeen = moment(user.lastSeen).calendar();
+        await user.save()
         return {
           status: 200,
           message: user
         }
       }
       const updateNeeded = await Users.getUserByToken(user.token.token)
-      await Users.findOneAndUpdate({email: user.email, username: user.username},{$set:{
-        lastSeen: updateNeeded.time
-      }},{new: true});
-      console.log(updateNeeded)
+      await user.set({lastSeen: updateNeeded.time});
       user.lastSeen = moment(updateNeeded.time).calendar();
       await user.generateAuth();
+      await user.save()
       return {
         status: 200,
         message: user

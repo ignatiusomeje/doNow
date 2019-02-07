@@ -5,7 +5,6 @@ const moment = require('moment');
 const {Users} = require('./../../models/user')
 
 async function changeDetails(userId, details){
-  console.log(userId)
   try{
     if (!ObjectID.isValid(userId)){
       return {
@@ -22,10 +21,9 @@ async function changeDetails(userId, details){
       }
     }
     if (user.lastUpdate === null){
-      body.lastUpdate = new Date()
-      await Users.findByIdAndUpdate({_id: userId},{$set:
-        body
-      },{new: true});
+      body.lastUpdate = new Date();
+      await user.set(body);
+      await user.save()
       return {
         status: 200,
         message: 'Your details has been updated Successful'
@@ -40,9 +38,8 @@ async function changeDetails(userId, details){
         }
       }else {
         body.lastUpdate = new Date()
-        await Users.findByIdAndUpdate({_id: userId},{$set:
-          body
-        },{new: true});
+        await user.set(body);
+        await user.save()
         return {
           status: 200,
           message: 'Your details has been updated Successful'
@@ -50,7 +47,10 @@ async function changeDetails(userId, details){
       }
     }
   }catch(e){
-
+    return {
+      status: 404,
+      message: 'Unable to update User\'s details'
+    }
   }
 }
 
