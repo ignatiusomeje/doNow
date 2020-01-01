@@ -1,53 +1,444 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
-  version: "0.0.1"
-  title: Hello World App
-# during dev, should point to your local machine
-host: localhost:10010
-# basePath prefixes all resource paths 
-basePath: /
-# 
+  title: "An Upgraded Todo Version"
+  description: "This is a Todo App that allows users to save, update, get and Delete their Todos. The Users can create, update and login to their account"
+  version: "2.0.0"
+host: "localhost:3000"
+basePath: "/api/v1"
 schemes:
-  # tip: remove http to make production-grade
-  - http
-  - https
-# format of bodies a client can send (Content-Type)
+  - "https"
+  - "http"
+tags:
+  - name: "Todos"
+    description: "All Todo Routes"
+  - name: "Users"
+    description: "All Users Routes"
 consumes:
-  - application/json
-# format of the responses to the client (Accepts)
+  - "application/json"
 produces:
-  - application/json
-x-a127-config: {}
-x-a127-services: {}
+  - "application/json"
 paths:
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
-    x-a127-apply: {}
-    get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
+  /todos:
+    post:
+      tags: 
+        - "Todos"
+      summary: "Creates a new Todo for the user"
+      description: "Creates a new Todo for the user and returns the created Todo. the length of your activity must be above 9 letters"
+      x-swagger-router-controller: "todos"
+      operationId: "createTodo"
       parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
+        - in: "header"
+          name: "Bearer"
+          type: "string"
+          description: "token key given to the user upon login"
+          required: true
+        - in: "body"
+          name: "body"
+          description: "contains the user's Todo Object"
+          required: true
+          schema:
+            type: "object"
+            required:
+              - "activity"
+            properties:
+              activity:
+                type: "string"
+                description: "activity to be done by the user"
+      responses:
+        200:
+          description: "Todo Creation Successful"
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/single"
+    get:
+      tags: 
+        - "Todos"
+      summary: "Gets all the Todos"
+      description: Gets all the Todos created by a user
+      operationId: todoGetAllRoute
+      parameters:
+        - in: header
+          name: Bearer
+          type: string
+          description: token key given to the user upon login
+          required: true
+      responses:
+        200:
+          description: All Todos gotten Successfully
+          schema:
+            $ref: "#/definitions/many"
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: No Todo Found
+          schema:
+            $ref: "#/definitions/single"
+  /todos/{id}:
+    get:
+      tags: 
+        - Todos
+      summary: Gets a single Todo
+      description: Gets a single Todo for the user using the Todo id
+      operationId: todoGetOneRoute
+      parameters:
+        - in: path
+          name: id
+          description: Id of the Todo
+          required: true
+          type: string
+        - in: header
+          name: Bearer
+          type: string
+          description: token key given to the user upon login
+          required: true
+      responses:
+        200:
+          description: Todo retrieval was Successfully done
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: No Todo Found
+          schema:
+            $ref: "#/definitions/single"
+    put:
+      tags: 
+        - Todos
+      summary: updates a Todo for the user
+      description: updates a Todo for the user using the Todo's id and returns the updated Todo
+      operationId: todoUpdateRoute
+      parameters:
+        - in: body
+          name: body
+          description: contains the Todo's update Object
+          required: true
+          schema:
+            type: object
+            required:
+              - activity
+            properties:
+              activity:
+                type: string
+                description: activity to be done by the user
+              isDone:
+                type: boolean
+                description: tells if a task has been done by the user
+        - in: header
+          name: Bearer
+          type: string
+          description: token key given to the user upon login
+          required: true
+        - in: path
+          name: id
+          description: Id of the Todo
+          required: true
           type: string
       responses:
-        "200":
-          description: Success
+        200:
+          description: Todo's Update was Successful
           schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
+            $ref: "#/definitions/single"
+        400:
+          description: Bad Request
           schema:
-            $ref: "#/definitions/ErrorResponse"
-# complex objects have schema definitions
+            $ref: "#/definitions/single"
+        404:
+          description: No Todo Found
+          schema:
+            $ref: "#/definitions/single"
+    delete:
+      tags: 
+        - Todos
+      summary: deletes a Todo for the user
+      description: deletes a Todo for the user using the Todo's id and returns the deleted Todo
+      operationId: todoDeleteRoute
+      parameters:
+        - in: header
+          name: Bearer
+          type: string
+          description: token key given to the user upon login
+          required: true
+        - in: path
+          name: id
+          description: Id of the Todo
+          required: true
+          type: string
+      responses:
+        200:
+          description: Todo's Deletion was Successful
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: Bad Request
+          schema:
+            $ref: "#/definitions/single"
+  /users:
+    post:
+      tags: 
+        - "Users"
+      summary: "Creates a new User"
+      description: "Creates a new user and returns the created user's details"
+      x-swagger-router-controller: "users"
+      operationId: "createUser"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "contains the user's detail"
+          required: true
+          schema:
+            type: "object"
+            required:
+              - "firstName"
+              - "lastName"
+              - "username"
+              - "email"
+              - "password"
+              - "dob"
+              - "address"
+              - "phoneNumber"
+            properties:
+              firstName:
+                type: "string"
+                description: "first name of the user"
+              lastName:
+                type: "string"
+                description: "last Name of the user"
+              username:
+                type: "string"
+                description: "Username of the user"
+              email:
+                type: "string"
+                description: "Email Address of the user"
+              password:
+                type: "string"
+                description: "Password of the user"
+              dob:
+                type: "string"
+                description: "Date of Birth of the user"
+              address:
+                type: "string"
+                description: "Address of the user"
+              phoneNumber:
+                type: "string"
+                description: "Phone Number of the user"
+      responses:
+        200:
+          description: "Todo Creation Successful"
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/single"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/single"
+  /users/login:
+    post:
+      tags: 
+        - "Users"
+      summary: "user's Login"
+      description: "Allows users to login to the APP"
+      x-swagger-router-controller: "users"
+      operationId: "loginUser"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "contains the user's login detail"
+          required: true
+          schema:
+            type: "object"
+            required:
+              - "username"
+              - "password"
+            properties:
+              username:
+                type: "string"
+                description: "Username or Email of the user"
+              password:
+                type: "string"
+                description: "Password of the user"
+      responses:
+        200:
+          description: "successfully Logged in"
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: "username/password Invalid"
+          schema:
+            $ref: "#/definitions/single"
+  /users/{email}/{token}:
+    get:
+      tags: 
+        - "Users"
+      summary: "Verifies User Account"
+      description: "Allows users to verify their Account"
+      x-swagger-router-controller: "users"
+      operationId: "verifyUserAccount"
+      parameters:
+        - in: path
+          name: "email"
+          description: "Email of the user"
+          required: true
+          type: string
+        - in: path
+          name: "token"
+          description: "Authentication Token"
+          required: true
+          type: string
+      responses:
+        200:
+          description: Account verification successful
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: Invalid Token or Email
+          schema:
+            $ref: "#/definitions/single"
+  /users/reset-password:
+    post:
+      tags: 
+        - "Users"
+      summary: "Initiates the process for password reset"
+      description: "accepts a user's email and sends a reset link to the email"
+      x-swagger-router-controller: "users"
+      operationId: "resetUserPassword"
+      parameters:
+        - in: body
+          name: body
+          description: "contains the Email Address"
+          required: true
+          schema:
+            type: object
+            required:
+              - email
+            properties:
+              email:
+                type: string
+                description: "user's Email address"
+      responses:
+        200:
+          description: "Password reset link sent successfully to the user's Email"
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: "Error during password reset"
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: "No User found"
+          schema:
+            $ref: "#/definitions/single"
+  /users/password/{id}:
+    patch:
+      tags: 
+        - "Users"
+      summary: "Changes User's password"
+      description: "Allows users to change their password. it accepts only the user's password. it only works for users who have initiated the process of password reset"
+      x-swagger-router-controller: "users"
+      operationId: changeUserPassword
+      parameters:
+        - in: path
+          name: id
+          description: Id of the user
+          required: true
+          type: string
+      responses:
+        200:
+          description: "password changed successfullly"
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: "Invalid detail(s)"
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: "No User found"
+          schema:
+            $ref: "#/definitions/single"
+  /users/change-details:
+    patch:
+      tags: 
+        - "Users"
+      summary: "Changes User's details"
+      description: "Allows users to change their details. it allows them to change their firstname, lastname, date of birth, password, address, phone number. the user must be logged in, to achieve this"
+      x-swagger-router-controller: "users"
+      operationId: changeUserDetails
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "contains the user's details that would be changed"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              firstName:
+                type: "string"
+                description: "first name of the user"
+              lastName:
+                type: "string"
+                description: "last Name of the user"
+              password:
+                type: "string"
+                description: "Password of the user"
+              dob:
+                type: "string"
+                description: "Date of Birth of the user"
+              address:
+                type: "string"
+                description: "Address of the user"
+              phoneNumber:
+                type: "string"
+                description: "Phone Number of the user"
+        - in: header
+          name: Bearer
+          type: string
+          description: token key given to the user upon login
+          required: true
+      responses:
+        200:
+          description: "details changed successfullly"
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: "Invalid detail(s)"
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: "unable to update user's details"
+          schema:
+            $ref: "#/definitions/single"
 definitions:
-  HelloWorldResponse:
-    type: string
-  ErrorResponse:
-    type: string
+  single:
+    type: object
+    properties:
+      status:
+        type: number
+        description: status of Code
+      message:
+        type: object
+        description: The Data returned
+  many:
+    type: object
+    properties:
+      status:
+        type: number
+        description: status of Code
+      message:
+        type: array
+        items: 
+          type: object
+        description: The Data returned

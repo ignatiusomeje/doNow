@@ -1,68 +1,79 @@
-'use strict';
+// 'use strict';
 
-var a127 = require('a127-magic');
-var express = require('express');
-const bodyParser = require('body-parser');
+var a127 = require("a127-magic");
+var express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const mongoose = require("mongoose");
+
+const todoRoute = require("./api/routes/todoRoutes");
+const userRoute = require("./api/routes/userRoutes");
 
 var app = express();
 
-const {todoCreateRoute} = require('./api/controllers/todoroutes/create-todo-route');
-const {todoGetAllRoute} = require('./api/controllers/todoroutes/get-todo-route');
-const {todoGetOneRoute} = require('./api/controllers/todoroutes/get-todo-by-id-route');
-const {todoUpdateRoute} = require('./api/controllers/todoroutes/update-todo-route');
-const {todoDeleteRoute} = require('./api/controllers/todoroutes/delete-todo-route');
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+//   );
+//   next();
+// });
 
-const {userCreateRoute} = require('./api/controllers/userroutes/create-user-route');
-const {userLoginRoute} = require('./api/controllers/userroutes/login-user-route');
-const {userVerifyAccountRoute} = require('./api/controllers/userroutes/verify-account-route');
-const {userPasswordResetRoute} = require('./api/controllers/userroutes/reset-password-route');
-const {userChangePasswordRoute} = require('./api/controllers/userroutes/change-password-route');
-const {userChangeDetailsRoute} = require('./api/controllers/userroutes/change-details-route')
+// allows api access from different origins]
+app.use(cors());
+app.options("*", cors());
 
+// parses the incoming datas
+// ({ type: "application/*+json" }
+app.use(bodyParser.json({ type: "application/*+json" }));
+app.use(bodyParser.urlencoded({ extended: false }));
+
+mongoose.connect("mongodb://localhost:27017/UpgradedTodo", {
+  useNewUrlParser: true
+});
+
+// mongoose.connect(
+//   "mongodb://heroku_hwldkxwb:AqCzdpNL!jzZt5h@ds119490.mlab.com:19490/heroku_hwldkxwb",
+//   { useNewUrlParser: true }
+// );
+
+// routes for todo activities
+app.use("/api/v1/todos", todoRoute);
+
+// routes for users details
+app.use("/api/v1/users", userRoute);
 
 module.exports = app; // for testing
 
 // initialize a127 framework
 a127.init(function(config) {
-
   // include a127 middleware
   app.use(a127.middleware(config));
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({extended: false}))
-
   // error handler to emit errors as a json string
   app.use(function(err, req, res, next) {
-    if (typeof err !== 'object') {
+    if (typeof err !== "object") {
       // If the object is not an Error, create a representation that appears to be
       err = {
         message: String(err) // Coerce to string
       };
     } else {
       // Ensure that err.message is enumerable (It is not by default)
-      Object.defineProperty(err, 'message', { enumerable: true });
+      Object.defineProperty(err, "message", { enumerable: true });
     }
 
     // Return a JSON representation of #/definitions/ErrorResponse
-    res.set('Content-Type', 'application/json');
+    res.set("Content-Type", "application/json");
     res.end(JSON.stringify(err));
   });
 
-  app.post('/todos', todoCreateRoute);
-  app.get('/todos', todoGetAllRoute);
-  app.get('/todos/:id', todoGetOneRoute);
-  app.patch('/todos/:id', todoUpdateRoute);
-  app.delete('/todos/:id', todoDeleteRoute);
-
-  app.post('/users', userCreateRoute);
-  app.post('/login', userLoginRoute);
-  app.get('/:email/:token', userVerifyAccountRoute);
-  app.post('/reset-password', userPasswordResetRoute);
-  app.patch('/password/:id', userChangePasswordRoute);
-  app.patch('/change-details', userChangeDetailsRoute);
-
-  var ip = process.env.IP || 'localhost';
-  var port = process.env.PORT || 3000;
+  // var ip = process.env.IP || 'localhost';
+  // var port = process.env.PORT || 3000;
   // begin listening for client requests
-  app.listen(port, ip);
+  // app.listen(port, ip);
 });

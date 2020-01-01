@@ -9,16 +9,17 @@
   "main": "app.js",
   "dependencies": {
     "a127-magic": "^0.12.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "express": "3.x.x",
-    "jsonwebtoken": "^8.4.0",
-    "lodash": "^4.17.11",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.0",
+    "lodash": "^4.17.15",
     "mailgun-js": "^0.22.0",
-    "moment": "^2.23.0",
-    "mongodb": "^3.1.10",
-    "mongoose": "^5.4.0",
+    "moment": "^2.24.0",
+    "mongodb": "^3.1.13",
+    "mongoose": "^5.4.14",
     "token-generator": "^1.0.0",
     "validator": "^10.11.0",
     "volos-analytics-apigee": "",
@@ -38,12 +39,15 @@
     "should": "4.4.x",
     "supertest": "0.15.x"
   },
+  "engines": {
+    "node": "10.x"
+  },
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon server.js"
   },
   "api": {
     "name": "upgraded-todo",
     "basePath": "/upgraded-todo",
-    "main": "app.js"
+    "main": "server.js"
   }
 }

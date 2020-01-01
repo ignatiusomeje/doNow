@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./user');
 
 const TodoSchema = new mongoose.Schema({
   activity: {
@@ -24,6 +25,7 @@ const TodoSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     trim: true,
+    ref: 'User'
   },
   isDeleted: {
     type: Boolean,

@@ -26,14 +26,14 @@ const UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 2,
-    unique: true,
+    //unique: true,
   },
   email:{
     type: String,
     required: true,
     trim: true,
     minlength: 2,
-    unique: true,
+    //unique: true,
     validate:{
       validator: isEmail,
       message: props => `${props.value} is not a valid email`
@@ -46,7 +46,7 @@ const UserSchema = new mongoose.Schema({
     minlength: 2,
   },
   dob:{
-    type: String,
+    type: String || Date,
     required: true,
     trim: true,
     minlength: 2,
@@ -136,7 +136,7 @@ UserSchema.methods.generateAuth = async function(){
   }catch(e){
     return {
       status: 400,
-      message: 'Unable to generate the user\'s token'
+      message: "Unable to generate the user's token"
     }
   }
 }
@@ -166,7 +166,7 @@ UserSchema.statics.getUserByToken = async function(token){
   }catch(e){
     return {
       status: 400,
-      message: 'Unable to find the User using the user\'s token'
+      message: "Unable to find the User using the user's token"
     }
   }
 }
