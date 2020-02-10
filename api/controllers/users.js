@@ -6,11 +6,10 @@ const { ObjectID } = require("mongodb");
 const { Users, tokenGenerator } = require("./../models/user");
 const { emailer } = require("./../utilities/emailsender");
 
-const url = "http://localhost:3000/api/v1/users/";
+const url = "http://localhost:3000/user";
 //check reset_password.js for editing
 
 exports.createUser = async (req, res, next) => {
-  console.log(req.body);
   try {
     const token = await tokenGenerator.generate();
 
@@ -23,7 +22,7 @@ exports.createUser = async (req, res, next) => {
       dob: req.body.dob,
       address: req.body.address,
       phoneNumber: req.body.phoneNumber,
-      authToken: token
+      signInToken: token
     });
     const emailVerify = await Users.findOne({
       $or: [{ email: req.body.email }, { username: req.body.username }]
@@ -75,7 +74,7 @@ exports.loginUser = async (req, res, next) => {
     }
     const checkPassword = await bcrypt.compare(body.password, user.password);
     if (checkPassword) {
-      if (user.authToken !== null) {
+      if (user.signInToken !== null) {
         return res.status(400).json({
           status: 400,
           message: "please do verify your account from your email account"
@@ -147,10 +146,10 @@ exports.verifyUserAccount = async (req, res, next) => {
         });
       } else {
         const user = await Users.findOneAndUpdate(
-          { email: req.params.email, authToken: req.params.token },
+          { email: req.params.email, signInToken: req.params.token },
           {
             $set: {
-              authToken: null
+              signInToken: null
             }
           },
           { new: true }
@@ -282,7 +281,10 @@ exports.changeUserDetails = async (req, res, next) => {
       await user.save();
       return res.status(200).json({
         status: 200,
-        message: "Your details has been updated Successfully"
+        message: {
+          info: "Your details has been updated Successfully",
+          details: user
+        }
       });
     }
     if (user.lastUpdate !== null) {

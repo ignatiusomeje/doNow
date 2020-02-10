@@ -126,7 +126,7 @@ exports.todoUpdate = async (req, res, next) => {
 
     const body = pick(req.body, ["activity", "isDone"]);
     if (body.isDone && isBoolean(body.isDone)) {
-      body.isDoneDate = Date.now();
+      body.isDoneDate = new Date();
     } else {
       body.isDone = false;
       body.isDoneDate = null;
@@ -160,7 +160,6 @@ exports.todoUpdate = async (req, res, next) => {
       message: doc
     });
   } catch (e) {
-    console.log(e);
     return res.status(404).json({
       status: 404,
       message: "No Todo found or Todo has been deleted"

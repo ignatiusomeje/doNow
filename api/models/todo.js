@@ -1,46 +1,45 @@
-const mongoose = require('mongoose');
-const User = require('./user');
+const mongoose = require("mongoose");
+const User = require("./user");
 
 const TodoSchema = new mongoose.Schema({
   activity: {
     type: String,
     required: true,
     trim: true,
-    minlength: 5,
+    minlength: 5
   },
   CreatedAt: {
     type: Date,
-    default: new Date()
+    default: Date.now
   },
   isDone: {
     type: Boolean,
     required: true,
-    default: false,
+    default: false
   },
   isDoneDate: {
     type: Date,
-    default: null,
+    default: null
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    trim: true,
-    ref: 'User'
+    trim: true
   },
   isDeleted: {
     type: Boolean,
     default: false
   },
-  durationCreatedAt:{
+  durationCreatedAt: {
     type: String,
-    default: null,
+    default: null
   },
-  durationDoneAt:{
+  durationDoneAt: {
     type: String,
-    default: null,
+    default: null
   }
 });
 
-const Todos = mongoose.model('Todos', TodoSchema)
+const Todos = mongoose.model("Todos", TodoSchema);
 
-module.exports = { Todos }
+module.exports = { Todos };

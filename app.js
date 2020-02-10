@@ -30,7 +30,7 @@ app.options("*", cors());
 
 // parses the incoming datas
 // ({ type: "application/*+json" }
-app.use(bodyParser.json({ type: "application/*+json" }));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose.connect("mongodb://localhost:27017/UpgradedTodo", {

@@ -1,176 +1,198 @@
-const mongoose = require('mongoose');
-const {isEmail, isMobilePhone} = require('validator');
-const tokenGenerator = require('token-generator')({
-  salt: 'welcome to this api',
+const mongoose = require("mongoose");
+const { isEmail, isMobilePhone } = require("validator");
+const tokenGenerator = require("token-generator")({
+  salt: "welcome to this api",
   timestampMap: "abcdefg123"
 });
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const {pick} = require('lodash') 
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { pick } = require("lodash");
 
 const UserSchema = new mongoose.Schema({
-  firstName:{
+  firstName: {
     type: String,
     required: true,
     trim: true,
-    minlength: 2,
+    minlength: 2
   },
-  lastName:{
+  lastName: {
     type: String,
     required: true,
     trim: true,
-    minlength: 2,
+    minlength: 2
   },
-  username:{
+  username: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 2
+    //unique: true,
+  },
+  email: {
     type: String,
     required: true,
     trim: true,
     minlength: 2,
     //unique: true,
-  },
-  email:{
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 2,
-    //unique: true,
-    validate:{
+    validate: {
       validator: isEmail,
       message: props => `${props.value} is not a valid email`
     }
   },
-  password:{
+  password: {
     type: String,
     required: true,
     trim: true,
-    minlength: 2,
+    minlength: 2
   },
-  dob:{
+  dob: {
     type: String || Date,
     required: true,
     trim: true,
-    minlength: 2,
+    minlength: 2
   },
-  address:{
+  address: {
     type: String,
     required: true,
     trim: true,
-    minlength: 2,
+    minlength: 2
   },
-  phoneNumber:{
+  phoneNumber: {
     type: String,
     required: true,
     trim: true,
     minlength: 9,
-    validate:{
+    validate: {
       validator: isMobilePhone,
       message: props => `${props.value} is not a valid Phone Number`
     }
   },
-  lastSeen:{
+  lastSeen: {
     type: String,
-    default: null,
+    default: null
   },
-  lastUpdate:{
+  lastUpdate: {
     type: Date,
-    default: null,
+    default: null
   },
-  isValid:{
+  isValid: {
     type: Boolean,
-    default: false,
+    default: false
   },
-  token:{
-    access:{
+  token: {
+    access: {
       type: String,
-      default: null,
+      default: null
     },
-    token:{
+    token: {
       type: String,
       default: null
     }
   },
-  authToken:{
+  authToken: {
     type: String,
-    default: null,
+    default: null
+  },
+  signInToken: {
+    type: String,
+    default: null
   }
-  
 });
 
-UserSchema.pre('save', function(next){
+UserSchema.pre("save", function(next) {
   const user = this;
-  try{
-    if (user.isModified('password')){
-      bcrypt.genSalt(10, function(err, salt){
-        bcrypt.hash(user.password, salt, function (err, hash){
-        user.password = hash;
+  try {
+    if (user.isModified("password")) {
+      bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(user.password, salt, function(err, hash) {
+          user.password = hash;
           next();
-        })
-      })
-    }else{
-      next()
+        });
+      });
+    } else {
+      next();
     }
-  }catch(e){
+  } catch (e) {
     next();
   }
 });
 
-UserSchema.methods.toJSON = function(){
+UserSchema.methods.toJSON = function() {
   const user = this;
-  try{
+  try {
     const config = user.toObject();
-    return  pick(config, ['firstName','lastName','username','email','dob','address','phoneNumber','lastSeen','lastUpdate','token']);
-  }catch(e){
+    return pick(config, [
+      "firstName",
+      "lastName",
+      "username",
+      "email",
+      "dob",
+      "address",
+      "phoneNumber",
+      "lastSeen",
+      "lastUpdate",
+      "token",
+      "isValid",
+      "_id"
+    ]);
+  } catch (e) {
     return e;
   }
-}
+};
 
-UserSchema.methods.generateAuth = async function(){
+UserSchema.methods.generateAuth = async function() {
   const user = this;
-  try{
+  try {
     const access = "Bearer";
-    const token = jwt.sign({_id: user.id, time: new Date(), access}, 'hackers').toString();
+    const token = jwt
+      .sign({ _id: user.id, time: new Date(), access }, "hackers")
+      .toString();
     user.token.access = access;
     user.token.token = token;
     await user.save();
     return token;
-  }catch(e){
+  } catch (e) {
     return {
       status: 400,
       message: "Unable to generate the user's token"
-    }
+    };
   }
-}
+};
 
-UserSchema.statics.getUserByToken = async function(token){
+UserSchema.statics.getUserByToken = async function(token) {
   const Users = this;
-  try{
-    if (!token){
+  try {
+    if (!token) {
       return {
         status: 403,
-        message: 'An Unintelligent Hacker Found'
-      }
+        message: "An Unintelligent Hacker Found"
+      };
     }
-    const decoded =  await jwt.verify(token, 'hackers');
-    const verified = await Users.findOne({_id: decoded._id, "token.access": decoded.access, "token.token": token});
-    if (!verified){
+    const decoded = await jwt.verify(token, "hackers");
+    const verified = await Users.findOne({
+      _id: decoded._id,
+      "token.access": decoded.access,
+      "token.token": token
+    });
+    if (!verified) {
       return {
         status: 403,
-        message: 'Unauthorised access noticed'
-      }
+        message: "Unauthorised access noticed"
+      };
     }
     return {
       status: 200,
-      message: verified, 
+      message: verified,
       time: decoded.time
-    }
-  }catch(e){
+    };
+  } catch (e) {
     return {
       status: 400,
       message: "Unable to find the User using the user's token"
-    }
+    };
   }
-}
+};
 
-const Users = mongoose.model('Users', UserSchema);
+const Users = mongoose.model("Users", UserSchema);
 
 module.exports = { Users, tokenGenerator };
