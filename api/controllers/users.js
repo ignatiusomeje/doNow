@@ -105,14 +105,6 @@ exports.loginUser = async (req, res, next) => {
         await user.set({ lastSeen: updateNeeded.time });
         user.lastSeen = moment(updateNeeded.time).calendar();
 
-        const payment = new Payments({
-          CustomerEmail: user.email
-        });
-        const pay = await payment.save();
-        if (!pay) {
-          throw Error();
-        }
-
         await user.generateAuth();
         await user.save();
 
