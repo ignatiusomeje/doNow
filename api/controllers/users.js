@@ -2,6 +2,7 @@ const { pick } = require("lodash");
 const bcrypt = require("bcryptjs");
 const moment = require("moment");
 const { ObjectID } = require("mongodb");
+const Payments = require("./../models/Payment");
 
 const { Users, tokenGenerator } = require("./../models/user");
 const { emailer } = require("./../utilities/emailsender");
@@ -43,6 +44,15 @@ exports.createUser = async (req, res, next) => {
         if (err) {
           return res.status(err.status).json(err);
         }
+
+        const payment = new Payments({
+          CustomerEmail: req.body.email
+        });
+        const pay = await payment.save();
+        if (!pay) {
+          throw Error();
+        }
+
         await user.save();
         res.status(data.status).json(data);
       } catch (e) {
@@ -84,6 +94,7 @@ exports.loginUser = async (req, res, next) => {
         await user.set({ lastSeen: new Date() });
         await user.generateAuth();
         user.lastSeen = moment(user.lastSeen).calendar();
+
         await user.save();
         return res.status(200).json({
           status: 200,
@@ -93,6 +104,14 @@ exports.loginUser = async (req, res, next) => {
         const updateNeeded = await Users.getUserByToken(user.token.token);
         await user.set({ lastSeen: updateNeeded.time });
         user.lastSeen = moment(updateNeeded.time).calendar();
+
+        const payment = new Payments({
+          CustomerEmail: user.email
+        });
+        const pay = await payment.save();
+        if (!pay) {
+          throw Error();
+        }
 
         await user.generateAuth();
         await user.save();

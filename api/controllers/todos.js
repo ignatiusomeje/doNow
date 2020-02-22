@@ -1,8 +1,12 @@
 const moment = require("moment");
 const { isBoolean, pick } = require("lodash");
 
+const Payments = require("./../models/Payment");
+const { deductAmount } = require("./../utilities/deductUser");
 const { Todos } = require("./../models/todo");
 const { ObjectID } = require("mongodb");
+
+const price = 2;
 
 exports.createTodo = async (req, res, next) => {
   try {
@@ -18,6 +22,26 @@ exports.createTodo = async (req, res, next) => {
       creator: req.body.user.message._id
     });
 
+    const payed = Payments.findOne({
+      CustomerEmail: req.body.user.message.email
+    });
+
+    if (payed.amount < 2) {
+      return res.status(200).json({
+        status: 402,
+        message: "Your Coin is down"
+      });
+    }
+
+    const deducted = await deductAmount(req.body.user.message.email, price);
+
+    if (deducted.status !== 200) {
+      return res.status(deducted.status).json({
+        status: deducted.status,
+        message: deducted.message
+      });
+    }
+
     const docs = await todo.save();
     if (!docs) {
       throw Error();
@@ -25,6 +49,7 @@ exports.createTodo = async (req, res, next) => {
     if (docs.isDone === true) {
       docs.durationCreatedAt = moment(docs.CreatedAt).calendar();
       docs.durationDoneAt = moment(docs.isDoneDate).calendar();
+
       return res.status(200).json({
         status: 200,
         message: docs
@@ -130,6 +155,26 @@ exports.todoUpdate = async (req, res, next) => {
     } else {
       body.isDone = false;
       body.isDoneDate = null;
+    }
+
+    const payed = Payments.findOne({
+      CustomerEmail: req.body.user.message.email
+    });
+
+    if (payed.amount < 2) {
+      return res.status(200).json({
+        status: 402,
+        message: "Your Coin is down"
+      });
+    }
+
+    const deducted = await deductAmount(req.body.user.message.email, price);
+
+    if (deducted.status !== 200) {
+      return res.status(deducted.status).json({
+        status: deducted.status,
+        message: deducted.message
+      });
     }
 
     const doc = await Todos.findOneAndUpdate(
