@@ -25,15 +25,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minlength: 2
-    //unique: true,
+    minlength: 2,
+    unique: true
   },
   email: {
     type: String,
     required: true,
     trim: true,
     minlength: 2,
-    //unique: true,
+    unique: true,
     validate: {
       validator: isEmail,
       message: props => `${props.value} is not a valid email`

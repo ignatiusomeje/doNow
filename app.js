@@ -5,6 +5,8 @@ var express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const todoRoute = require("./api/routes/todoRoutes");
 const userRoute = require("./api/routes/userRoutes");
@@ -33,12 +35,12 @@ app.options("*", cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-mongoose.connect("mongodb://localhost:27017/UpgradedTodo", {
+mongoose.connect(process.env.LOCAL_MONGO, {
   useNewUrlParser: true
 });
 
 // mongoose.connect(
-//   "mongodb://heroku_hwldkxwb:AqCzdpNL!jzZt5h@ds119490.mlab.com:19490/heroku_hwldkxwb",
+//   process.env.HEROKU_MONGO,
 //   { useNewUrlParser: true }
 // );
 

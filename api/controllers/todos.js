@@ -5,8 +5,10 @@ const Payments = require("./../models/Payment");
 const { deductAmount } = require("./../utilities/deductUser");
 const { Todos } = require("./../models/todo");
 const { ObjectID } = require("mongodb");
+const dotenv = require("dotenv");
+dotenv.config();
 
-const price = 2;
+const price = process.env.PRICE;
 
 exports.createTodo = async (req, res, next) => {
   try {

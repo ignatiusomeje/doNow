@@ -6,8 +6,10 @@ const Payments = require("./../models/Payment");
 
 const { Users, tokenGenerator } = require("./../models/user");
 const { emailer } = require("./../utilities/emailsender");
+const dotenv = require("dotenv");
+dotenv.config();
 
-const url = "http://localhost:3000/user";
+const url = process.env.USER_URL;
 //check reset_password.js for editing
 
 exports.createUser = async (req, res, next) => {
