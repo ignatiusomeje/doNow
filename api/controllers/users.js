@@ -9,7 +9,7 @@ const { emailer } = require("./../utilities/emailsender");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const url = process.env.USER_URL;
+const url = process.env.ONLINE_USER_URL;
 //check reset_password.js for editing
 
 exports.createUser = async (req, res, next) => {
