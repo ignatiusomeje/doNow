@@ -1,4 +1,4 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: "An Upgraded Todo Version"
   description: "This is a Todo App that allows users to save, update, get and Delete their Todos. The Users can create, update and login to their account"
@@ -20,7 +20,7 @@ produces:
 paths:
   /todos:
     post:
-      tags: 
+      tags:
         - "Todos"
       summary: "Creates a new Todo for the user"
       description: "Creates a new Todo for the user and returns the created Todo. the length of your activity must be above 9 letters"
@@ -54,7 +54,7 @@ paths:
           schema:
             $ref: "#/definitions/single"
     get:
-      tags: 
+      tags:
         - "Todos"
       summary: "Gets all the Todos"
       description: Gets all the Todos created by a user
@@ -80,7 +80,7 @@ paths:
             $ref: "#/definitions/single"
   /todos/{id}:
     get:
-      tags: 
+      tags:
         - Todos
       summary: Gets a single Todo
       description: Gets a single Todo for the user using the Todo id
@@ -110,7 +110,7 @@ paths:
           schema:
             $ref: "#/definitions/single"
     put:
-      tags: 
+      tags:
         - Todos
       summary: updates a Todo for the user
       description: updates a Todo for the user using the Todo's id and returns the updated Todo
@@ -155,7 +155,7 @@ paths:
           schema:
             $ref: "#/definitions/single"
     delete:
-      tags: 
+      tags:
         - Todos
       summary: deletes a Todo for the user
       description: deletes a Todo for the user using the Todo's id and returns the deleted Todo
@@ -182,7 +182,7 @@ paths:
             $ref: "#/definitions/single"
   /users:
     post:
-      tags: 
+      tags:
         - "Users"
       summary: "Creates a new User"
       description: "Creates a new user and returns the created user's details"
@@ -244,7 +244,7 @@ paths:
             $ref: "#/definitions/single"
   /users/login:
     post:
-      tags: 
+      tags:
         - "Users"
       summary: "user's Login"
       description: "Allows users to login to the APP"
@@ -282,7 +282,7 @@ paths:
             $ref: "#/definitions/single"
   /users/{email}/{token}:
     get:
-      tags: 
+      tags:
         - "Users"
       summary: "Verifies User Account"
       description: "Allows users to verify their Account"
@@ -310,7 +310,7 @@ paths:
             $ref: "#/definitions/single"
   /users/reset-password:
     post:
-      tags: 
+      tags:
         - "Users"
       summary: "Initiates the process for password reset"
       description: "accepts a user's email and sends a reset link to the email"
@@ -344,7 +344,7 @@ paths:
             $ref: "#/definitions/single"
   /users/password/{id}:
     patch:
-      tags: 
+      tags:
         - "Users"
       summary: "Changes User's password"
       description: "Allows users to change their password. it accepts only the user's password. it only works for users who have initiated the process of password reset"
@@ -371,7 +371,7 @@ paths:
             $ref: "#/definitions/single"
   /users/change-details:
     patch:
-      tags: 
+      tags:
         - "Users"
       summary: "Changes User's details"
       description: "Allows users to change their details. it allows them to change their firstname, lastname, date of birth, password, address, phone number. the user must be logged in, to achieve this"
@@ -421,6 +421,79 @@ paths:
           description: "unable to update user's details"
           schema:
             $ref: "#/definitions/single"
+  /users/fund:
+    patch:
+      tags:
+        - "Users"
+      summary: "Updates users payment"
+      description: "gets users payment information from paystack and then saves and increase the user's amount in the database"
+      x-swagger-router-controller: "Payments"
+      operationId: UpdatePayment
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "contains the amount the user paid and the reference of payment"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              amount:
+                type: "number"
+                description: "amount user paid"
+              response:
+                type: "array"
+                items:
+                  type: object
+                description: "reply from paystack on whether the payment was successful"
+        - in: header
+          name: Bearer
+          type: string
+          description: token key given to the user upon login
+          required: true
+      responses:
+        200:
+          description: "payment accepted successfullly"
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: "User's email or amount cannot be empty"
+          schema:
+            $ref: "#/definitions/single"
+        403:
+          description: "No Payment has been made"
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: "Payment Update Failed"
+          schema:
+            $ref: "#/definitions/single"
+  /users/payments:
+    get:
+      tags:
+        - "Users"
+      summary: "gets the user's payment"
+      description: "Allows users to know the amount they have"
+      x-swagger-router-controller: "Payment"
+      operationId: fetchPayment
+      parameters:
+        - in: header
+          name: Bearer
+          type: string
+          description: token key given to the user upon login
+          required: true
+      responses:
+        200:
+          description: "payment fetched successfullly"
+          schema:
+            $ref: "#/definitions/single"
+        400:
+          description: "User's email cannot be empty"
+          schema:
+            $ref: "#/definitions/single"
+        404:
+          description: "Payment Retrival failed"
+          schema:
+            $ref: "#/definitions/single"
 definitions:
   single:
     type: object
@@ -439,6 +512,6 @@ definitions:
         description: status of Code
       message:
         type: array
-        items: 
+        items:
           type: object
         description: The Data returned

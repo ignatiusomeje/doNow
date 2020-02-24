@@ -36,7 +36,7 @@ exports.UpdatePayment = async (req, res, next) => {
         message: "User's email or amount cannot be empty"
       });
     } else if (req.body.response.status !== "success") {
-      return res.status(400).json({
+      return res.status(403).json({
         status: 403,
         message: "No Payment has been made"
       });
