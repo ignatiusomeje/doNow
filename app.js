@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //   useNewUrlParser: true
 // });
 
-mongoose.connect(process.env.HEROKU_MONGO, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO, { useNewUrlParser: true });
 
 // routes for todo activities
 app.use("/api/v1/todos", todoRoute);
