@@ -155,26 +155,26 @@ exports.todoUpdate = async (req, res, next) => {
     } else {
       body.isDone = false;
       body.isDoneDate = null;
-    }
 
-    const payed = Payments.findOne({
-      CustomerEmail: req.body.user.message.email
-    });
-
-    if (payed.amount < 2) {
-      return res.status(200).json({
-        status: 402,
-        message: "Your Coin is down"
+      const payed = Payments.findOne({
+        CustomerEmail: req.body.user.message.email
       });
-    }
 
-    const deducted = await deductAmount(req.body.user.message.email, price);
+      if (payed.amount < 2) {
+        return res.status(200).json({
+          status: 402,
+          message: "Your Coin is down"
+        });
+      }
 
-    if (deducted.status !== 200) {
-      return res.status(deducted.status).json({
-        status: deducted.status,
-        message: deducted.message
-      });
+      const deducted = await deductAmount(req.body.user.message.email, price);
+
+      if (deducted.status !== 200) {
+        return res.status(deducted.status).json({
+          status: deducted.status,
+          message: deducted.message
+        });
+      }
     }
 
     const doc = await Todos.findOneAndUpdate(
