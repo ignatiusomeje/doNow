@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 // allows api access from different origins]
 // app.use(cors(corsOption));
-// app.options("*", cors());
+app.options("*", cors());
 
 // parses the incoming datas
 // ({ type: "application/*+json" }
