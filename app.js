@@ -14,7 +14,7 @@ const userRoute = require("./api/routes/userRoutes");
 var app = express();
 
 const corsOption = {
-  origin: "https://assigment-todo-api.herokuapp.com/"
+  origin: "*"
 };
 
 // app.use((req, res, next) => {
@@ -31,7 +31,7 @@ const corsOption = {
 // });
 
 // allows api access from different origins]
-// app.use(cors());
+app.use(cors(corsOption));
 app.options("*", cors());
 
 // parses the incoming datas
@@ -46,10 +46,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 mongoose.connect(process.env.MONGO, { useNewUrlParser: true });
 
 // routes for todo activities
-app.use("/api/v1/todos", cors(corsOption), todoRoute);
+app.use("/api/v1/todos", todoRoute);
 
 // routes for users details
-app.use("/api/v1/users", cors(corsOption), userRoute);
+app.use("/api/v1/users", userRoute);
 
 module.exports = app; // for testing
 
