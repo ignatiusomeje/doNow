@@ -44,7 +44,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "api": {
     "name": "upgraded-todo",
