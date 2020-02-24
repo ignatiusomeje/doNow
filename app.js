@@ -17,6 +17,23 @@ var app = express();
 //   origin: true
 // };
 
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+//   );
+//   next();
+// });
+
+// allows api access from different origins]
+app.use(cors());
+app.options("*", cors());
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -29,10 +46,6 @@ app.use((req, res, next) => {
   );
   next();
 });
-
-// allows api access from different origins]
-app.use(cors());
-app.options("*", cors());
 
 // parses the incoming datas
 // ({ type: "application/*+json" }
