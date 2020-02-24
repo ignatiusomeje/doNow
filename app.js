@@ -28,7 +28,7 @@ var app = express();
 
 // allows api access from different origins]
 app.use(cors());
-app.options("*", cors());
+app.options("*/", cors());
 
 // parses the incoming datas
 // ({ type: "application/*+json" }
