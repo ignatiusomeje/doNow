@@ -14,7 +14,7 @@ const userRoute = require("./api/routes/userRoutes");
 var app = express();
 
 const corsOption = {
-  origin: true
+  origin: "https://assigment-todo-api.herokuapp.com/"
 };
 
 // app.use((req, res, next) => {
