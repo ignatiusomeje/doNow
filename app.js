@@ -13,6 +13,10 @@ const userRoute = require("./api/routes/userRoutes");
 
 var app = express();
 
+const corsOption = {
+  origin: true
+};
+
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader(
@@ -27,7 +31,7 @@ var app = express();
 // });
 
 // allows api access from different origins]
-app.use(cors());
+app.use(cors(corsOption));
 app.options("*/", cors());
 
 // parses the incoming datas
