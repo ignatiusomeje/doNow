@@ -35,14 +35,11 @@ app.options("*", cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-mongoose.connect(process.env.LOCAL_MONGO, {
-  useNewUrlParser: true
-});
+// mongoose.connect(process.env.LOCAL_MONGO, {
+//   useNewUrlParser: true
+// });
 
-// mongoose.connect(
-//   process.env.HEROKU_MONGO,
-//   { useNewUrlParser: true }
-// );
+mongoose.connect(process.env.HEROKU_MONGO, { useNewUrlParser: true });
 
 // routes for todo activities
 app.use("/api/v1/todos", todoRoute);
