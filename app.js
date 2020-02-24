@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 });
 
 // allows api access from different origins]
-// app.use(cors(corsOption));
+app.use(cors());
 app.options("*", cors());
 
 // parses the incoming datas
