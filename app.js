@@ -14,7 +14,7 @@ const userRoute = require("./api/routes/userRoutes");
 var app = express();
 
 const corsOption = {
-  origin: false
+  origin: true
 };
 
 // app.use((req, res, next) => {
