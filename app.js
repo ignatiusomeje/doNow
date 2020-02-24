@@ -13,9 +13,9 @@ const userRoute = require("./api/routes/userRoutes");
 
 var app = express();
 
-// const corsOption = {
-//   origin: true
-// };
+const corsOption = {
+  origin: true
+};
 
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -31,21 +31,8 @@ var app = express();
 // });
 
 // allows api access from different origins]
-app.use(cors());
+// app.use(cors());
 app.options("*", cors());
-
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
-});
 
 // parses the incoming datas
 // ({ type: "application/*+json" }
@@ -59,10 +46,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 mongoose.connect(process.env.MONGO, { useNewUrlParser: true });
 
 // routes for todo activities
-app.use("/api/v1/todos", todoRoute);
+app.use("/api/v1/todos", cors(corsOption), todoRoute);
 
 // routes for users details
-app.use("/api/v1/users", userRoute);
+app.use("/api/v1/users", cors(corsOption), userRoute);
 
 module.exports = app; // for testing
 
