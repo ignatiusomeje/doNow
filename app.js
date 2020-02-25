@@ -17,55 +17,32 @@ var app = express();
 //   origin: "*"
 // };
 
-const isPreflight = req => {
-  console.log("from isPreflight: ", req);
-  return (
-    req.method === "OPTIONS" &&
-    req.headers["origin"] &&
-    req.headers["access-control-request-method"]
-  );
-};
+// const isPreflight = req => {
+//   return (
+//     req.method === "OPTIONS" &&
+//     req.headers["origin"] &&
+//     req.headers["access-control-request-method"]
+//   );
+// };
 
-app.use((req, res, next) => {
-  console.log("from app.use before Access-Control-Allow-Origin: ", res);
-  res.set(
-    "Access-Control-Allow-Origin",
-    "https://assigment-todo-ui.herokuapp.com"
-  );
-  console.log("from app.use after Access-Control-Allow-Origin: ", res);
+// app.use((req, res, next) => {
+//   res.set(
+//     "Access-Control-Allow-Origin",
+//     "https://assigment-todo-ui.herokuapp.com"
+//   );
 
-  if (isPreflight(req)) {
-    console.log(
-      "from app.use in if before Access-Control-Allow-Headers: ",
-      res
-    );
-    res.set({
-      "Access-Control-Allow-Headers":
-        "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-    });
-    console.log(
-      "from app.use in if b4 Access-Control-Allow-Methods and after Access-Control-Allow-Headers: ",
-      res
-    );
-    // res.setHeader(
-    //   "Access-Control-Allow-Methods",
-    //   "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-    // );
-    console.log(
-      "from app.use in if b4 status and after Access-Control-Allow-Methods:  ",
-      res
-    );
-    res.status(200).end();
-    console.log(
-      "from app.use in if after status  Access-Control-Allow-Methods: ",
-      res
-    );
-    return;
-  }
+//   if (isPreflight(req)) {
+//     res.set({
+//       "Access-Control-Allow-Headers":
+//         "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization",
+//       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+//     });
 
-  next();
-});
+//     res.status(200).end();
+//     return;
+//   }
+//   next();
+// });
 
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -82,8 +59,8 @@ app.use((req, res, next) => {
 // });
 
 // allows api access from different origins]
-// app.use(cors(corsOption));
-// app.options("*", cors());
+app.use(cors());
+app.options("*", cors());
 
 // parses the incoming datas
 // ({ type: "application/*+json" }

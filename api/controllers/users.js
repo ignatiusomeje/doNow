@@ -65,6 +65,7 @@ exports.createUser = async (req, res, next) => {
       }
     });
   } catch (e) {
+    console.log(e);
     return res.status(400).json({
       status: 400,
       message: "Unable to create a user account"
