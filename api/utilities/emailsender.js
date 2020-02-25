@@ -15,6 +15,7 @@ const mailgun = require("mailgun-js")({
 async function emailer(userAddress, email, callback) {
   try {
     await mailGun.validate(userAddress, async (error, body) => {
+      console.log(error);
       if (error) {
         const err = {
           status: 400,
