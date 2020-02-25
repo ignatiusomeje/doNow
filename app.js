@@ -28,7 +28,7 @@ const isPreflight = req => {
 
 app.use((req, res, next) => {
   console.log("from app.use before Access-Control-Allow-Origin: ", res);
-  res.setHeader(
+  res.set(
     "Access-Control-Allow-Origin",
     "https://assigment-todo-ui.herokuapp.com"
   );
@@ -39,23 +39,24 @@ app.use((req, res, next) => {
       "from app.use in if before Access-Control-Allow-Headers: ",
       res
     );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-    );
+    res.set({
+      "Access-Control-Allow-Headers":
+        "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    });
     console.log(
       "from app.use in if b4 Access-Control-Allow-Methods and after Access-Control-Allow-Headers: ",
       res
     );
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-    );
+    // res.setHeader(
+    //   "Access-Control-Allow-Methods",
+    //   "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    // );
     console.log(
       "from app.use in if b4 status and after Access-Control-Allow-Methods:  ",
       res
     );
-    res.status(204).end();
+    res.status(200).end();
     console.log(
       "from app.use in if after status  Access-Control-Allow-Methods: ",
       res
