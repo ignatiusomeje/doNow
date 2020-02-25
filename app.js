@@ -26,7 +26,10 @@ const isPreflight = req => {
 };
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://assigment-todo-ui.herokuapp.com/"
+  );
 
   if (isPreflight(req)) {
     res.setHeader(
