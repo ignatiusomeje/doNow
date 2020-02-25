@@ -13,51 +13,6 @@ const userRoute = require("./api/routes/userRoutes");
 
 var app = express();
 
-// const corsOption = {
-//   origin: "*"
-// };
-
-// const isPreflight = req => {
-//   return (
-//     req.method === "OPTIONS" &&
-//     req.headers["origin"] &&
-//     req.headers["access-control-request-method"]
-//   );
-// };
-
-// app.use((req, res, next) => {
-//   res.set(
-//     "Access-Control-Allow-Origin",
-//     "https://assigment-todo-ui.herokuapp.com"
-//   );
-
-//   if (isPreflight(req)) {
-//     res.set({
-//       "Access-Control-Allow-Headers":
-//         "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization",
-//       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-//     });
-
-//     res.status(200).end();
-//     return;
-//   }
-//   next();
-// });
-
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-//   );
-//   res.status(200);
-//   next();
-// });
-
 // allows api access from different origins]
 app.use(cors());
 app.options("*", cors());
