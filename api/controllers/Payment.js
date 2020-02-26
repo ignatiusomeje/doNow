@@ -48,6 +48,7 @@ exports.UpdatePayment = async (req, res, next) => {
     if (!amounts) {
       throw Error();
     }
+    const receipts = [req.body.response, ...amounts.paymentReciepts];
 
     const pay = await Payments.findOneAndUpdate(
       {
@@ -56,9 +57,7 @@ exports.UpdatePayment = async (req, res, next) => {
       {
         $set: {
           amount: amounts.amount + req.body.amount,
-          $push: {
-            paymentReciepts: req.body.response
-          }
+          paymentReciepts: receipts
         }
       },
       { new: true }
